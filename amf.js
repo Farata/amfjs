@@ -259,7 +259,11 @@ amf.Client.prototype._createPacket = function() {
       messageBody = new amf.MessageBody();
       messageBody.responseURI = "/" + this.sequence;
       message = new amf.RemotingMessage();
-      message.destination = this.destination;
+
+      // The server rejects requests if destination is not specified while
+      // creating the client. As the default value for destination we use message
+      // source.
+      message.destination = this.destination || promise.request.source;
       message.source = promise.request.source;
       message.operation = promise.request.operation;
       message.body = promise.request.params;
